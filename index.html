@@ -16,6 +16,7 @@
       <th>Edit</th>
       <th>First Name</th>
       <th>Last Name</th>
+      <th>Lunch Choices</th>
     </tr>
   </thead>
   <tbody>
@@ -27,6 +28,7 @@
       </td>
       <td>{{ user.fName }}</td>
       <td>{{ user.lName }}</td>
+      <td>{{ user.lunch }}</td>
       <td>
         <button class="btn" ng-click="deleteUser(user.id)">
           <span class="glyphicon glyphicon-pencil"></span>  Delete
@@ -71,12 +73,12 @@
     <input type="password" ng-model="passw2" placeholder="Repeat Password">
     </div>
   </div>
-   <div class="form-group">
+  <div class="form-group">
     <label class="col-sm-2 control-label">Lunch choices:</label>
     <div class="col-sm-10">
-    <input type="text" ng-model="lunch" placeholder="e.g. Chicken rice">
+    <input type="text" ng-model="lunch" ng-disabled="!edit" placeholder="e.g. Chicken rice">
     </div>
-  </div>
+    </div>
 </form>
 
 <hr>
@@ -90,17 +92,17 @@
   function userController($scope) {
     $scope.fName = '';
     $scope.lName = '';
+    $scope.lunch = '';
     $scope.passw1 = '';
     $scope.passw2 = '';
     
     //We can replace this with a Firebase url later on. 
     $scope.users = [
-        {id:1, fName:'Hege'  , lName:"Pege" , lunch:'Chicken Rice' },
-        {id:2, fName:'Kim'   , lName:"Pim" , lunch:'Chicken Rice'},
-        {id:3, fName:'Jack'  , lName:"Jones" , lunch:'Chicken Rice'},
-        {id:4, fName:'John'  , lName:"Doe" , lunch:'Chicken Rice'},
-        {id:5, fName:'Peter' , lName:"Pan" , lunch:'Chicken Rice'}
-        {
+        {id:1, fName:'Hege'  , lName:"Pege", lunch:"Chicken Rice" },
+        {id:2, fName:'Kim'   , lName:"Pim" , lunch:"Chicken Rice"},
+        {id:3, fName:'Jack'  , lName:"Jones" , lunch:"Chicken Rice"},
+        {id:4, fName:'John'  , lName:"Doe" , lunch:"Chicken Rice"},
+        {id:5, fName:'Peter' , lName:"Pan" , lunch:"Chicken Rice"}
     ];
     
     $scope.edit = true;
@@ -128,6 +130,7 @@
     $scope.$watch('passw2',function() {$scope.test();});
     $scope.$watch('fName', function() {$scope.test();});
     $scope.$watch('lName', function() {$scope.test();});
+    $scope.$watch('lunch', function() {$scope.text();});
     $scope.test = function() {
         if ($scope.passw1 !== $scope.passw2) {
             $scope.error = true;
@@ -143,11 +146,12 @@
       //Add new if no index is passed in.
       if($scope.currentId=='new'){
         //Using the array length as the next index while prototyping. 
-        $scope.users.push({id:$scope.users.length+1, fName:$scope.fName  , lName:$scope.lName });
+        $scope.users.push({id:$scope.users.length+1, fName:$scope.fName  , lName:$scope.lName, lunch:$scope.lunch });
       }
       else{
         $scope.users[$scope.currentId-1].fName = $scope.fName;
         $scope.users[$scope.currentId-1].lName = $scope.lName;
+        $scope.users[$scope.currentId-1].lName = $scope.lunch;
       }
     };
     
